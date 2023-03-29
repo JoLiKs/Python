@@ -1,0 +1,29 @@
+import random
+import time
+from pyrogram import Client, filters
+from pyrogram.types import Message
+
+app = Client("my_account", api_id=20974770, api_hash="")
+init_amount = 1
+amount = init_amount
+looses = 0
+
+@app.on_message(filters.bot)
+def echo(message: Message):
+    global amount, init_amount, looses
+    clock = random.uniform(0.5, 2)
+    time.sleep(clock)
+    if looses > 10:
+        amount = init_amount*10
+        looses = 0
+    if "проиграл" in message.caption:
+        amount = amount*2
+        looses = looses + 1
+        message.reply_text(f"Рулетка красное {amount}kk")
+    if "выиграл" in message.caption:
+        looses = 0
+        amount = init_amount
+        message.reply_text(f"Рулетка красное {amount}kk")
+
+
+app.run()
